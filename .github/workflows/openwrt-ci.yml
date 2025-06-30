@@ -83,6 +83,8 @@ jobs:
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Hysteria=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_IPT2Socks=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
+          CONFIG_PACKAGE_luci-app-webadmin=y
+          CONFIG_PACKAGE_luci-i18n-webadmin-zh-cn=y
           CONFIG_PACKAGE_trojan=y
           CONFIG_boost-compile-visibility-hidden=y
           CONFIG_boost-runtime-shared=y
