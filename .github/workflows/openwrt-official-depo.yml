@@ -119,6 +119,7 @@ jobs:
           CONFIG_PACKAGE_dnsmasq_full_nftset=y
           CONFIG_PACKAGE_dnsmasq_full_noid=y
           CONFIG_PACKAGE_dnsmasq_full_tftp=y
+          CONFIG_PACKAGE_etherwake=y
           CONFIG_PACKAGE_hysteria=y
           CONFIG_PACKAGE_ip-full=y
           CONFIG_PACKAGE_ipset=y
@@ -134,8 +135,11 @@ jobs:
           CONFIG_PACKAGE_kmod-nf-ipt=y
           CONFIG_PACKAGE_kmod-nf-tproxy=y
           CONFIG_PACKAGE_kmod-nft-compat=y
+          CONFIG_PACKAGE_kmod-nft-fullcone=y
+          CONFIG_PACKAGE_kmod-tcp-bbr=y
           CONFIG_PACKAGE_libatomic=y
           CONFIG_PACKAGE_libbpf=y
+          CONFIG_PACKAGE_libcap-ng=y
           CONFIG_PACKAGE_libcurl=y
           CONFIG_PACKAGE_libelf=y
           CONFIG_PACKAGE_libev=y
@@ -161,25 +165,45 @@ jobs:
           CONFIG_PACKAGE_libubus-lua=y
           CONFIG_PACKAGE_libuci-lua=y
           CONFIG_PACKAGE_libudns=y
+          CONFIG_PACKAGE_libuuid=y
           CONFIG_PACKAGE_libxtables=y
           CONFIG_PACKAGE_lua=y
           CONFIG_PACKAGE_lua-neturl=y
+          CONFIG_PACKAGE_luci=y
+          CONFIG_PACKAGE_luci-app-firewall=y
+          CONFIG_PACKAGE_luci-app-package-manager=y
           CONFIG_PACKAGE_luci-app-ssr-plus=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_ChinaDNS_NG=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Hysteria=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_IPT2Socks=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
+          CONFIG_PACKAGE_luci-app-turboacc=y
+          CONFIG_PACKAGE_luci-app-upnp=y
+          CONFIG_PACKAGE_luci-app-wol=y
           CONFIG_PACKAGE_luci-base=y
+          CONFIG_PACKAGE_luci-compat=y
           CONFIG_PACKAGE_luci-lib-base=y
           CONFIG_PACKAGE_luci-lib-ip=y
+          CONFIG_PACKAGE_luci-lib-ipkg=y
           CONFIG_PACKAGE_luci-lib-jsonc=y
           CONFIG_PACKAGE_luci-lib-nixio=y
+          CONFIG_PACKAGE_luci-light=y
           CONFIG_PACKAGE_luci-lua-runtime=y
+          CONFIG_PACKAGE_luci-mod-admin-full=y
+          CONFIG_PACKAGE_luci-mod-network=y
+          CONFIG_PACKAGE_luci-mod-status=y
+          CONFIG_PACKAGE_luci-mod-system=y
+          CONFIG_PACKAGE_luci-proto-ipv6=y
+          CONFIG_PACKAGE_luci-proto-ppp=y
+          CONFIG_PACKAGE_luci-theme-bootstrap=y
           CONFIG_PACKAGE_microsocks=y
+          CONFIG_PACKAGE_miniupnpd-nftables=y
           CONFIG_PACKAGE_resolveip=y
           CONFIG_PACKAGE_rpcd=y
           CONFIG_PACKAGE_rpcd-mod-file=y
+          CONFIG_PACKAGE_rpcd-mod-iwinfo=y
           CONFIG_PACKAGE_rpcd-mod-luci=y
+          CONFIG_PACKAGE_rpcd-mod-rrdns=y
           CONFIG_PACKAGE_rpcd-mod-ucode=y
           CONFIG_PACKAGE_shadowsocks-libev-config=y
           CONFIG_PACKAGE_shadowsocks-libev-ss-local=y
@@ -193,6 +217,8 @@ jobs:
           CONFIG_PACKAGE_ucode-mod-html=y
           CONFIG_PACKAGE_ucode-mod-lua=y
           CONFIG_PACKAGE_ucode-mod-math=y
+          CONFIG_PACKAGE_uhttpd=y
+          CONFIG_PACKAGE_uhttpd-mod-ubus=y
           CONFIG_PACKAGE_xtables-nft=y
           CONFIG_boost-compile-visibility-hidden=y
           CONFIG_boost-runtime-shared=y
@@ -217,28 +243,8 @@ jobs:
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
 
-      - name: Prepare artifact
-        run: |
-          mkdir -p ./artifact/package
-          mkdir -p ./artifact/buildinfo
-          rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
-          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
-
-      - name: Upload buildinfo
-        uses: actions/upload-artifact@v4
-        with:
-          name: OpenWrt_buildinfo
-          path: ./artifact/buildinfo/
-
-      - name: Upload package
-        uses: actions/upload-artifact@v4
-        with:
-          name: OpenWrt_package
-          path: ./artifact/package/
-
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: OpenWrt_firmware
-          path: ./bin/targets/
+          path: ./bin/
