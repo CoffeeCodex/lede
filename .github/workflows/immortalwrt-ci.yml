@@ -44,6 +44,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: immortalwrt/immortalwrt
+          ref: openwrt-24.10
 
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
@@ -88,6 +89,7 @@ jobs:
           CONFIG_LIBCURL_TLS_SRP=y
           CONFIG_LIBCURL_UNIX_SOCKETS=y
           CONFIG_LIBSODIUM_MINIMAL=y
+          CONFIG_LUCI_LANG_zh_Hans=y
           CONFIG_MBEDTLS_AES_C=y
           CONFIG_MBEDTLS_CMAC_C=y
           CONFIG_MBEDTLS_DES_C=y
@@ -123,6 +125,8 @@ jobs:
           CONFIG_PACKAGE_coreutils=y
           CONFIG_PACKAGE_coreutils-base64=y
           CONFIG_PACKAGE_curl=y
+          CONFIG_PACKAGE_default-settings=y
+          CONFIG_PACKAGE_default-settings-chn=y
           CONFIG_PACKAGE_dns2socks=y
           CONFIG_PACKAGE_dns2tcp=y
           CONFIG_PACKAGE_dnsmasq_full_ipset=y
@@ -188,6 +192,13 @@ jobs:
           CONFIG_PACKAGE_luci-app-zerotier=y
           CONFIG_PACKAGE_luci-base=y
           CONFIG_PACKAGE_luci-compat=y
+          CONFIG_PACKAGE_luci-i18n-base-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-package-manager-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-ssr-plus-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-turboacc-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-zerotier-zh-cn=y
           CONFIG_PACKAGE_luci-lib-base=y
           CONFIG_PACKAGE_luci-lib-ip=y
           CONFIG_PACKAGE_luci-lib-ipkg=y
@@ -239,6 +250,18 @@ jobs:
 
       - name: Download packages
         run: make download -j16
+
+      - name: Compile firmware
+        run: |
+          make -j$(nproc) || make -j1 V=s
+          echo "======================="
+          echo "Space usage:"
+          echo "======================="
+          df -h
+          echo "======================="
+          du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
+          du -h --max-depth=1 ./build_dir
+          du -h --max-depth=1 ./bin
       
       - name: Prepare artifact
         run: |
@@ -259,18 +282,6 @@ jobs:
         with:
           name: OpenWrt_package
           path: ./artifact/package/
-
-      - name: Compile firmware
-        run: |
-          make -j$(nproc) || make -j1 V=s
-          echo "======================="
-          echo "Space usage:"
-          echo "======================="
-          df -h
-          echo "======================="
-          du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
-          du -h --max-depth=1 ./build_dir
-          du -h --max-depth=1 ./bin
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
